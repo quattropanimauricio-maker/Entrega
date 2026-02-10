@@ -5,29 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ENTREGA</title>
 <style>
-body{font-family:Arial;background:#111;color:#fff;padding:20px}
-h1{color:#00e0ff}
-input,button{width:100%;padding:12px;margin:6px 0;border-radius:6px;border:none}
-button{background:#00e0ff;font-weight:bold}
-.card{background:#222;padding:10px;margin-top:10px;border-radius:6px}
+body{margin:0;font-family:Arial;background:#0d0d0d;color:white}
+.screen{display:none;padding:20px}
+.active{display:block}
+h1{color:#00e0ff;text-align:center}
+button{width:100%;padding:14px;border:none;border-radius:10px;background:#00e0ff;font-weight:bold;margin-top:10px}
+input{width:100%;padding:12px;border-radius:8px;border:none;margin:6px 0}
+.card{background:#1a1a1a;padding:10px;margin:10px 0;border-radius:10px}
 .ok{background:#1e7f43}
-img{max-width:100%;margin-top:5px;border-radius:6px}
+img{max-width:100%;border-radius:8px;margin-top:6px}
+.fade{animation:fade .5s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
 
-<h1>ENTREGA</h1>
-<p>No es un recordatorio. Es verificación.</p>
+<div id="home" class="screen active fade">
+  <h1>ENTREGA</h1>
+  <p>El sistema que verifica, no recuerda.</p>
+  <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=800&q=80">
+  <button onclick="go('app')">Comenzar</button>
+</div>
 
-<input id="task" placeholder="Escribí la tarea">
-<input type="file" id="photo" accept="image/*">
-<button onclick="addTask()">Agregar</button>
-
-<div id="list"></div>
+<div id="app" class="screen fade">
+  <h1>Tareas</h1>
+  <input id="task" placeholder="Escribí la tarea">
+  <input type="file" id="photo" accept="image/*">
+  <button onclick="addTask()">Agregar</button>
+  <div id="list"></div>
+</div>
 
 <script>
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
+function go(s){
+  document.querySelectorAll('.screen').forEach(d=>d.classList.remove('active'));
+  document.getElementById(s).classList.add('active');
+}
 function render(){
   list.innerHTML="";
   tasks.forEach((t,i)=>{
@@ -56,16 +69,11 @@ function addTask(){
   }
   task.value=""; photo.value="";
 }
-function verify(i){
-  tasks[i].ok=true;
-  save();
-}
-function save(){
-  localStorage.setItem("tasks",JSON.stringify(tasks));
-  render();
-}
+function verify(i){tasks[i].ok=true;save();}
+function save(){localStorage.setItem("tasks",JSON.stringify(tasks));render();}
 render();
 </script>
 
 </body>
 </html>
+
