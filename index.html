@@ -3,93 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ENTREGA</title>
+<title>ENTREGA PRO</title>
 <style>
-body{margin:0;font-family:Arial;background:#0b0f1a;color:white}
-.screen{display:none;padding:20px;min-height:100vh}
-.active{display:block}
-h1{color:#00e0ff;text-align:center;font-size:40px}
-h2{text-align:center}
-button{width:100%;padding:14px;border:none;border-radius:12px;
-background:linear-gradient(90deg,#00e0ff,#00ffa2);
-font-weight:bold;font-size:16px;margin-top:10px}
-input{width:100%;padding:12px;border-radius:10px;border:none;margin:6px 0}
-.card{background:#151a2d;padding:12px;margin:10px 0;border-radius:12px}
-.ok{background:#1e7f43}
-img{max-width:100%;border-radius:10px;margin-top:10px}
-.hero{animation:fade 1s}
-@keyframes fade{from{opacity:0}to{opacity:1}}
-.badge{background:#00e0ff;color:black;padding:4px 10px;border-radius:20px;font-size:12px}
+body{margin:0;font-family:Arial;background:#0b0f1a;color:white;padding:20px}
+h1{color:#00e0ff;text-align:center}
+input,select,button{width:100%;padding:12px;margin:6px 0;border-radius:8px;border:none}
+button{background:#00e0ff;font-weight:bold}
+.card{background:#151a2d;padding:10px;margin:10px 0;border-radius:10px}
+.pendiente{border-left:5px solid orange}
+.entregado{border-left:5px solid green}
 </style>
 </head>
 <body>
 
-<!-- HOME -->
-<div id="home" class="screen active hero">
-  <span class="badge">NUEVO</span>
-  <h1>ENTREGA</h1>
-  <h2>Porque “ya lo hice” no es una prueba</h2>
-  <p style="text-align:center">Menos discusiones. Más responsabilidad. Evidencia real.</p>
-  <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=900&q=80">
-  <button onclick="go('benefits')">Ver cómo funciona</button>
-</div>
+<h1>ENTREGA PRO</h1>
 
-<!-- BENEFITS -->
-<div id="benefits" class="screen">
-  <h1>¿Por qué ENTREGA?</h1>
-  <div class="card">✔ Evita discusiones</div>
-  <div class="card">✔ Fomenta responsabilidad</div>
-  <div class="card">✔ Evidencia con fotos</div>
-  <div class="card">✔ Ideal para familias</div>
-  <button onclick="go('app')">Empezar ahora</button>
-</div>
+<input id="desc" placeholder="Descripción">
+<input id="resp" placeholder="Responsable">
+<input type="date" id="fecha">
+<select id="evi">
+  <option>Foto</option>
+  <option>Archivo</option>
+  <option>Texto</option>
+</select>
+<button onclick="crear()">Asignar Entrega</button>
 
-<!-- APP -->
-<div id="app" class="screen">
-  <h1>Mis Entregas</h1>
-  <input id="task" placeholder="¿Qué tarea debe entregar?">
-  <input type="file" id="photo" accept="image/*">
-  <button onclick="addTask()">Agregar tarea</button>
-  <div id="list"></div>
-</div>
+<h2>Mis Entregas</h2>
+<div id="list"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-function go(s){
-  document.querySelectorAll('.screen').forEach(d=>d.classList.remove('active'));
-  document.getElementById(s).classList.add('active');
-}
-function render(){
-  list.innerHTML="";
-  tasks.forEach((t,i)=>{
-    list.innerHTML+=`
-    <div class="card ${t.ok?'ok':''}">
-      <b>${t.text}</b><br>
-      ${t.img?`<img src="${t.img}">`:``}
-      <button onclick="verify(${i})">Verificar</button>
-    </div>`;
+const firebaseConfig = {
+  /* PEGÁ TU CONFIG ACÁ */
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+function crear(){
+  db.collection("entregas").add({
+    desc:desc.value,
+    resp:resp.value,
+    fecha:fecha.value,
+    evi:evi.value,
+    estado:"Pendiente",
+    ts:Date.now()
   });
 }
-function addTask(){
-  let text=task.value;
-  let file=photo.files[0];
-  if(!text)return;
-  if(file){
-    let r=new FileReader();
-    r.onload=e=>{
-      tasks.push({text,ok:false,img:e.target.result});
-      save();
-    };
-    r.readAsDataURL(file);
-  }else{
-    tasks.push({text,ok:false,img:null});
-    save();
-  }
-  task.value=""; photo.value="";
+
+db.collection("entregas").orderBy("ts","desc")
+.onSnapshot(snap=>{
+  list.innerHTML="";
+  snap.forEach(doc=>{
+    let d=doc.data();
+    list.innerHTML+=`
+    <div class="card ${d.estado.toLowerCase()}">
+      <b>${d.desc}</b><br>
+      👤 ${d.resp}<br>
+      📅 ${d.fecha}<br>
+      🟡 ${d.estado}
+      <button onclick="marcar('${doc.id}')">Marcar entregado</button>
+    </div>`;
+  });
+});
+
+function marcar(id){
+  db.collection("entregas").doc(id).update({estado:"Entregado"});
 }
-function verify(i){tasks[i].ok=true;save();}
-function save(){localStorage.setItem("tasks",JSON.stringify(tasks));render();}
-render();
 </script>
 
 </body>
