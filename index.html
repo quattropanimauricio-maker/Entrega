@@ -5,33 +5,51 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ENTREGA</title>
 <style>
-body{margin:0;font-family:Arial;background:#0d0d0d;color:white}
-.screen{display:none;padding:20px}
+body{margin:0;font-family:Arial;background:#0b0f1a;color:white}
+.screen{display:none;padding:20px;min-height:100vh}
 .active{display:block}
-h1{color:#00e0ff;text-align:center}
-button{width:100%;padding:14px;border:none;border-radius:10px;background:#00e0ff;font-weight:bold;margin-top:10px}
-input{width:100%;padding:12px;border-radius:8px;border:none;margin:6px 0}
-.card{background:#1a1a1a;padding:10px;margin:10px 0;border-radius:10px}
+h1{color:#00e0ff;text-align:center;font-size:40px}
+h2{text-align:center}
+button{width:100%;padding:14px;border:none;border-radius:12px;
+background:linear-gradient(90deg,#00e0ff,#00ffa2);
+font-weight:bold;font-size:16px;margin-top:10px}
+input{width:100%;padding:12px;border-radius:10px;border:none;margin:6px 0}
+.card{background:#151a2d;padding:12px;margin:10px 0;border-radius:12px}
 .ok{background:#1e7f43}
-img{max-width:100%;border-radius:8px;margin-top:6px}
-.fade{animation:fade .5s}
+img{max-width:100%;border-radius:10px;margin-top:10px}
+.hero{animation:fade 1s}
 @keyframes fade{from{opacity:0}to{opacity:1}}
+.badge{background:#00e0ff;color:black;padding:4px 10px;border-radius:20px;font-size:12px}
 </style>
 </head>
 <body>
 
-<div id="home" class="screen active fade">
+<!-- HOME -->
+<div id="home" class="screen active hero">
+  <span class="badge">NUEVO</span>
   <h1>ENTREGA</h1>
-  <p>El sistema que verifica, no recuerda.</p>
-  <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=800&q=80">
-  <button onclick="go('app')">Comenzar</button>
+  <h2>Porque “ya lo hice” no es una prueba</h2>
+  <p style="text-align:center">Menos discusiones. Más responsabilidad. Evidencia real.</p>
+  <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=900&q=80">
+  <button onclick="go('benefits')">Ver cómo funciona</button>
 </div>
 
-<div id="app" class="screen fade">
-  <h1>Tareas</h1>
-  <input id="task" placeholder="Escribí la tarea">
+<!-- BENEFITS -->
+<div id="benefits" class="screen">
+  <h1>¿Por qué ENTREGA?</h1>
+  <div class="card">✔ Evita discusiones</div>
+  <div class="card">✔ Fomenta responsabilidad</div>
+  <div class="card">✔ Evidencia con fotos</div>
+  <div class="card">✔ Ideal para familias</div>
+  <button onclick="go('app')">Empezar ahora</button>
+</div>
+
+<!-- APP -->
+<div id="app" class="screen">
+  <h1>Mis Entregas</h1>
+  <input id="task" placeholder="¿Qué tarea debe entregar?">
   <input type="file" id="photo" accept="image/*">
-  <button onclick="addTask()">Agregar</button>
+  <button onclick="addTask()">Agregar tarea</button>
   <div id="list"></div>
 </div>
 
@@ -76,4 +94,3 @@ render();
 
 </body>
 </html>
-
