@@ -50,30 +50,32 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 </script>
 
+<script>
 function crear(){
   db.collection("entregas").add({
-    desc:desc.value,
-    resp:resp.value,
-    fecha:fecha.value,
-    evi:evi.value,
-    estado:"Pendiente",
-    ts:Date.now()
+    desc: desc.value,
+    resp: resp.value,
+    fecha: fecha.value,
+    evi: evi.value,
+    estado: "Pendiente",
+    ts: Date.now()
   });
 }
 
 db.collection("entregas").orderBy("ts","desc")
 .onSnapshot(snap=>{
-  list.innerHTML="";
+  list.innerHTML = "";
   snap.forEach(doc=>{
-    let d=doc.data();
-    list.innerHTML+=`
-    <div class="card ${d.estado.toLowerCase()}">
-      <b>${d.desc}</b><br>
-      👤 ${d.resp}<br>
-      📅 ${d.fecha}<br>
-      🟡 ${d.estado}
-      <button onclick="marcar('${doc.id}')">Marcar entregado</button>
-    </div>`;
+    let d = doc.data();
+    list.innerHTML += `
+      <div class="card ${d.estado.toLowerCase()}">
+        <b>${d.desc}</b><br>
+        👤 ${d.resp}<br>
+        📅 ${d.fecha}<br>
+        🟡 ${d.estado}<br>
+        <button onclick="marcar('${doc.id}')">Marcar entregado</button>
+      </div>
+    `;
   });
 });
 
@@ -81,6 +83,7 @@ function marcar(id){
   db.collection("entregas").doc(id).update({estado:"Entregado"});
 }
 </script>
+
 
 </body>
 </html>
