@@ -37,10 +37,18 @@ button{background:#00e0ff;font-weight:bold}
 
 <script>
 const firebaseConfig = {
-  /* PEGÁ TU CONFIG ACÁ */
+  apiKey: "AIzaSyBah73rk0ld19RtJNtxxlTZjkKVFZo45c",
+  authDomain: "entrega-app-bfdcf.firebaseapp.com",
+  projectId: "entrega-app-bfdcf",
+  storageBucket: "entrega-app-bfdcf.firebasestorage.app",
+  messagingSenderId: "199555775562",
+  appId: "1:199555775562:web:638863a2b3a72e877dbab3",
+  measurementId: "G-65Y60H0FEK"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+</script>
 
 function crear(){
   db.collection("entregas").add({
